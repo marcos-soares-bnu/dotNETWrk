@@ -1,0 +1,132 @@
+﻿USE [Shell_AutoArchDB]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+
+********************************************************************************************************************
+
+Declare @UniqueId nvarchar(15) = 'teste';
+
+UPDATE [Shell_AutoArchDB].[dbo].[shell_Planning]
+   SET 
+	   ColSiteNum = i.ColSiteNum
+	  ,OperatorName = i.OperatorName
+	  ,DUName = i.DUName
+	  ,InstanceId = i.InstanceId
+	  ,DataExpCtrChk = i.DataExpCtrChk
+	  ,WaiverChk = i.WaiverChk
+	  ,VolumeGB = i.VolumeGB
+	  ,DurationWorkDays = i.DurationWorkDays
+	  ,PlanAOReceiveDate = i.PlanAOReceiveDate
+	  ,ActAOReceiveDate = i.ActAOReceiveDate
+	  ,PlanAOStartDate = i.PlanAOStartDate
+	  ,ActAOStartDate = i.ActAOStartDate
+	  ,PlanAOEndDate = i.PlanAOEndDate
+	  ,ActAOEndDate = i.ActAOEndDate
+	  ,Status = i.Status
+	  ,Comment = i.Comment
+FROM (
+    SELECT UniqueId,ColSiteNum,OperatorName,DUName,InstanceId,DataExpCtrChk,WaiverChk,VolumeGB
+		  ,DurationWorkDays,PlanAOReceiveDate,ActAOReceiveDate,PlanAOStartDate
+		  ,ActAOStartDate,PlanAOEndDate,ActAOEndDate,Status,Comment
+      FROM [Shell_AutoArchDB].[dbo].[shell_Planning]) i
+WHERE 
+	
+	i.UniqueId = @UniqueId
+
+
+********************************************************************************************************************
+
+
+ALTER PROCEDURE [dbo].[ecm_shell_UpdatePlan]
+		@UniqueId			nvarchar(15)
+AS
+BEGIN
+
+	BEGIN
+		DECLARE	@ColSiteNum			int
+		DECLARE	@OperatorName		nvarchar(50)
+		DECLARE	@DUName				nvarchar(150)
+		DECLARE	@InstanceId			nvarchar(50)
+		DECLARE	@DataExpCtrChk		int
+		DECLARE	@WaiverChk			int
+		DECLARE	@VolumeGB			numeric(10,2)
+		DECLARE	@DurationWorkDays	int
+		DECLARE	@PlanAOReceiveDate	datetime
+		DECLARE	@ActAOReceiveDate	datetime
+		DECLARE	@PlanAOStartDate	datetime
+		DECLARE	@ActAOStartDate		datetime
+		DECLARE	@PlanAOEndDate		datetime
+		DECLARE	@ActAOEndDate		datetime
+		DECLARE	@Status				ntext
+		DECLARE	@Comment			ntext
+	
+		/* *** SEL CAMPOS ACIMA ***      */	
+		SELECT [ColSiteNum]
+			  ,[OperatorName]
+			  ,[DUName]
+			  ,[InstanceId]
+			  ,[DataExpCtrChk]
+			  ,[WaiverChk]
+			  ,[VolumeGB]
+			  ,[DurationWorkDays]
+			  ,[PlanAOReceiveDate]
+			  ,[ActAOReceiveDate]
+			  ,[PlanAOStartDate]
+			  ,[ActAOStartDate]
+			  ,[PlanAOEndDate]
+			  ,[ActAOEndDate]
+			  ,[Status]
+			  ,[Comment]
+		  INTO @ColSiteNum
+			  ,@OperatorName
+			  ,@DUName
+			  ,@InstanceId
+			  ,@DataExpCtrChk
+			  ,@WaiverChk
+			  ,@VolumeGB
+			  ,@DurationWorkDays
+			  ,@PlanAOReceiveDate
+			  ,@ActAOReceiveDate
+			  ,@PlanAOStartDate
+			  ,@ActAOStartDate
+			  ,@PlanAOEndDate
+			  ,@ActAOEndDate
+			  ,@Status
+			  ,@Comment			  
+		  FROM [Shell_AutoArchDB].[dbo].[shell_Planning]
+		 WHERE [UniqueId] = @UniqueId
+	
+	
+		/* *** UPD CAMPOS ACIMA ***      */	
+		UPDATE [Shell_AutoArchDB].[dbo].[shell_Planning]
+		   SET [ColSiteNum] = @ColSiteNum
+			  ,[OperatorName] = @OperatorName
+			  ,[DUName] = @DUName
+			  ,[InstanceId] = @InstanceId
+			  ,[DataExpCtrChk] = @DataExpCtrChk
+			  ,[WaiverChk] = @WaiverChk
+			  ,[VolumeGB] = @VolumeGB
+			  ,[DurationWorkDays] = @DurationWorkDays
+			  ,[PlanAOReceiveDate] = @PlanAOReceiveDate
+			  ,[ActAOReceiveDate] = @ActAOReceiveDate
+			  ,[PlanAOStartDate] = @PlanAOStartDate
+			  ,[ActAOStartDate] = @ActAOStartDate
+			  ,[PlanAOEndDate] = @PlanAOEndDate
+			  ,[ActAOEndDate] = @ActAOEndDate
+			  ,[Status] = @Status
+			  ,[Comment] = @Comment
+		 WHERE [UniqueId] = @UniqueId
+	
+	END
+	
+    IF( @@ERROR <> 0 )
+    BEGIN
+		RETURN(-1)
+    END	
+	
+    RETURN(0)
+END
+
