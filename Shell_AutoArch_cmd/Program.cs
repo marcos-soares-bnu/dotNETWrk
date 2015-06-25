@@ -799,7 +799,7 @@ namespace Shell_AutoArch_cmd
                         Console.WriteLine("|Info| Starting Document CVR objects... " + fillWordCVR(unique_id)); 
                     }
                     //
-                    else if (args[0] == "0") { Console.WriteLine("|Info| Starting Test updAOVolume objects... " + updAOVolume(unique_id,args[2],args[3])); }
+                    else if (args[0] == "0") { Console.WriteLine("|Info| Starting Test MPS updAOVolume objects... " + updAOVolume(unique_id,args[2],args[3])); }
                     //
                     else { ErrMsg("Invalid arguments!", "Try again with correct values."); }
                 }
