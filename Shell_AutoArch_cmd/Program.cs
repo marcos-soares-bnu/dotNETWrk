@@ -644,7 +644,7 @@ namespace Shell_AutoArch_cmd
                 //----------------------------------------------------------------------------- 23/06/2015
                 //Updating AO volume in Planning table...
                 //
-                string aux = updAOVolume(UniqueID, "CVR Created", String.Format("{0:0.00}", retSizeSum[1])).ToString();
+                string aux = updAOVolume(UniqueID.Replace("_","-"), "CVR Created", String.Format("{0:0.00}", retSizeSum[1])).ToString();
                 ErrMsg("Update AO Volume in Planning table... ", aux);
                 //
                 //----------------------------------------------------------------------------- 23/06/2015

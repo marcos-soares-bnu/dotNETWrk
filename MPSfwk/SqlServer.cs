@@ -543,9 +543,9 @@ namespace SqlServer
 
             SqlCommand comm = new SqlCommand();
             comm.CommandText = @"  UPDATE [dbo].[shell_Planning]
-                                   SET [VolumeGB]   = '" + Volume   + "' " +
-                                     ",[Status]     = '" + Status   + "' " +
-                                "WHERE [UniqueId]   = '" + Uid      + "' ;"; 
+                                   SET [VolumeGB]   = '" + Volume.Replace(",",".")  + "' " +
+                                     ",[Status]     = '" + Status                   + "' " +
+                                "WHERE [UniqueId]   = '" + Uid                      + "' ;"; 
 
             try
             {

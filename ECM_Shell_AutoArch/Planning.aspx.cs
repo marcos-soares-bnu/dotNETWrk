@@ -96,7 +96,7 @@ namespace ECM_Shell_AutoArch
             if (ret.IndexOf("|Info| [") >= 0)
                 LoopchkNewUpd(ret);
             else
-                ret = "|Info| " + ret + " ...Start";
+                ret = "|Info| " + ret.Replace("\n", "") + " ...Start";
             //
             showLogTv(TreeView1, ret, "Shell Outlook AO Folder Content");
             TreeView1.CollapseAll();
@@ -171,9 +171,23 @@ namespace ECM_Shell_AutoArch
                 if ((action.IndexOf("new!") >= 0) || (action.IndexOf("upd!") >= 0))
                 {
                     //
-                    // test array length
+                    // test array length / field Edited...
+                    //
                     if ((arrValues.Length < 10) || (arrValues[1].IndexOf("]") == -1))
                         return;
+                    //
+                    if (arrValues[1].IndexOf("Edited") > 0)
+                    {
+                        int posi = arrValues[1].IndexOf(" ") + 1;
+                        int posf = arrValues[1].IndexOf("Edited");
+
+                        string aux = arrValues[1].Substring(posi, (posf - posi)).Trim();
+                        arrValues[1] = aux + "]";
+                    }
+                    else
+                    {
+                        if (arrValues[1].Length > 11) { arrValues[1] = arrValues[1].Replace(" - ","-"); }
+                    }
                     //
                     txt_uniqueid.Text = arrValues[1].Substring(0, arrValues[1].IndexOf("]"));
                     txt_uniqueid.Text = txt_uniqueid.Text.Replace(" ", "");
@@ -515,12 +529,16 @@ namespace ECM_Shell_AutoArch
                     a = new planning();
                     flgNew = true;
                 }
+                //if update, check if status is not equal to CVR... or Closed...
                 else if (flgChkAuto)
                 {
-                    if ((a.PlanAOEndDate.Year != 9999) && (a.Status == "Finished"))
+                    if (txt_status.Text.IndexOf("Archival Order Closed") == -1)
                     {
-                        ClrFields(false);
-                        return;
+                        if ((a.Status.IndexOf("Rejected") >= 0) || (a.Status.IndexOf("CVR Created") >= 0)) //Rejected
+                        {
+                            ClrFields(false);
+                            return;
+                        }
                     }
                 }
 
@@ -1073,9 +1091,5 @@ namespace ECM_Shell_AutoArch
 
             return _lbList;
         }
-
-
-
-
     }
 }

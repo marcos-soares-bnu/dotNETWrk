@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO.Compression;
 //
 using System.Data.OleDb;
+using System.Linq;
 
 namespace MPSfwk
 {
@@ -25,6 +26,24 @@ namespace MPSfwk
             //
             return null;
         }
+
+
+        //----------------------------------------------- 26/06/2015
+        // Returns the query variable, not query results! 
+        //
+        static IEnumerable<string> RunQueryFilter(IEnumerable<string> source, int num, string filter)
+        {
+            // Split the string and sort on field[num] 
+            var scoreQuery = from line in source
+                             let fields = line.Split(',')
+                             where fields[num].Contains(filter)
+                             orderby fields[num] descending
+                             select line;
+
+            return scoreQuery;
+        }
+        //----------------------------------------------- 26/06/2015
+
 
         //
         // Create a Datatable with Schedule Tasks list
@@ -54,21 +73,21 @@ namespace MPSfwk
                 string[] cols;
                 tasks = ret_cmd.Split(stringSeparator2, StringSplitOptions.None);
 
-                foreach (string ts in tasks)
+                foreach (string ts in RunQueryFilter(tasks,1,strFilter))
                 {
                     cols = ts.Split(stringSeparator1, StringSplitOptions.None);
-                    //
-                    if (!ehCabec)
-                    {
-                        if (cols[0].ToUpper().IndexOf("NOME DO HOST") > 0)
-                        { ehCabec = true; }
-                    }
-                    else
-                    {
-                        if (cols[0].ToUpper().IndexOf("NOME DO HOST") > 0)
-                        { break; }
-                        else
-                        {
+                    ////
+                    //if (!ehCabec)
+                    //{
+                    //    if (cols[0].ToUpper().IndexOf("NOME DO HOST") > 0)
+                    //    { ehCabec = true; }
+                    //}
+                    //else
+                    //{
+                    //    if (cols[0].ToUpper().IndexOf("NOME DO HOST") > 0)
+                    //    { break; }
+                    //    else
+                    //    {
                             if (cols.Length != 28)
                             { msg = msg + "Ocorreu um erro na leitura das Tasks! <br />"; }
                             else
@@ -76,8 +95,8 @@ namespace MPSfwk
                                 //
                                 //Add to show Filter per Task Name...
                                 //
-                                if (cols[1].IndexOf(strFilter) >= 0)
-                                {
+                                //if (cols[1].IndexOf(strFilter) >= 0)
+                                //{
                                     DataRow dr = dt.NewRow();
                                     dr["Name"] = cols[1] + " (" + cols[8] + ")";
                                     dr["Status"] = ConvEncString(cols[3]);
@@ -85,6 +104,7 @@ namespace MPSfwk
                                     for (int i = 18; i < 28; i++)
                                     {
                                         if ((cols[i].ToUpper().IndexOf("DESATIVADO") == -1) &&
+                                                (cols[i].ToUpper().IndexOf("DISABLED") == -1) &&
                                                 (cols[i].ToUpper().IndexOf("N/A") == -1) &&
                                                 (cols[i].ToUpper().IndexOf("NENHUM") == -1)
                                             ) { disp = disp + cols[i] + " "; }
@@ -95,10 +115,10 @@ namespace MPSfwk
                                     dr["Last Result"] = cols[6];
                                     dr["Author"] = cols[7];
                                     dt.Rows.Add(dr);
-                                }
+                                //}
                             }
-                        }
-                    }
+                    //    }
+                    //}
                 }
                 return dt;
             }
